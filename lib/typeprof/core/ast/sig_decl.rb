@@ -419,9 +419,10 @@ module TypeProf::Core
         super(raw_decl, lenv)
         @cpath = AST.resolve_rbs_name(raw_decl.new_name, lenv)
         @old_cpath = AST.resolve_rbs_name(raw_decl.old_name, lenv)
+        @cname_code_range = lenv.code_range_from_node(raw_decl.location[:new_name])
       end
 
-      attr_reader :cpath, :old_cpath
+      attr_reader :cpath, :old_cpath, :cname_code_range
       def attrs = { cpath:, old_cpath: }
 
       def define0(genv)

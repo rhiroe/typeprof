@@ -151,6 +151,16 @@ module TypeProf::Core
       @rb_text_nodes[path]&.retrieve_at(pos) do |node|
         node.boxes(:cread) do |box|
           if box.const_read && box.const_read.cdef
+            box.const_read.cdef.decls.each do |cdef_node|
+              next unless cdef_node.lenv.path
+              code_range =
+                if cdef_node.respond_to?(:cname_code_range) && cdef_node.cname_code_range
+                  cdef_node.cname_code_range
+                else
+                  cdef_node.code_range
+                end
+              defs << [cdef_node.lenv.path, code_range]
+            end
             box.const_read.cdef.defs.each do |cdef_node|
               defs << [cdef_node.lenv.path, cdef_node.cname_code_range]
             end
